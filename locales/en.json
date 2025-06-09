@@ -1,0 +1,41 @@
+{
+  "common": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password",
+    "name": "Full Name",
+    "continue": "Continue",
+    "or": "or",
+    "continueWith": "continue with",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "createAccount": "Create Account",
+    "loading": "Loading...",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account..."
+  },
+  "login": {
+    "title": "LookforX Admin",
+    "subtitle": "Enter your credentials to access the admin panel",
+    "loginFailed": "Login failed. Please try again.",
+    "googleLoginFailed": "Failed to connect with Google. Please try again."
+  },
+  "signup": {
+    "title": "Create Account",
+    "subtitle": "Create a new account",
+    "passwordRequirements": "Password requirements:",
+    "minChars": "At least 8 characters",
+    "upperCase": "At least one uppercase letter",
+    "number": "At least one number",
+    "specialChar": "At least one special character"
+  },
+  "branding": {
+    "title": "LookforX",
+    "loginDescription": "Sign in to access the admin panel",
+    "signupDescription": "Get started by creating a new account"
+  }
+}

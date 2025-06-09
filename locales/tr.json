@@ -1,0 +1,41 @@
+{
+  "common": {
+    "login": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "forgotPassword": "Şifremi Unuttum",
+    "name": "Ad Soyad",
+    "continue": "Devam Et",
+    "or": "veya",
+    "continueWith": "ile devam et",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "dontHaveAccount": "Hesabınız yok mu?",
+    "signIn": "Giriş Yap",
+    "signUp": "Kayıt Ol",
+    "createAccount": "Hesap Oluştur",
+    "loading": "Yükleniyor...",
+    "signingIn": "Giriş yapılıyor...",
+    "creatingAccount": "Hesap oluşturuluyor..."
+  },
+  "login": {
+    "title": "LookforX Admin",
+    "subtitle": "Yönetici paneline erişmek için giriş yapın",
+    "loginFailed": "Giriş başarısız. Lütfen tekrar deneyin.",
+    "googleLoginFailed": "Google ile bağlantı kurulamadı. Lütfen tekrar deneyin."
+  },
+  "signup": {
+    "title": "Hesap Oluştur",
+    "subtitle": "Yeni bir hesap oluşturun",
+    "passwordRequirements": "Şifre gereksinimleri:",
+    "minChars": "En az 8 karakter",
+    "upperCase": "En az bir büyük harf",
+    "number": "En az bir rakam",
+    "specialChar": "En az bir özel karakter"
+  },
+  "branding": {
+    "title": "LookforX",
+    "loginDescription": "Yönetici paneline erişmek için giriş yapın",
+    "signupDescription": "Yeni bir hesap oluşturarak başlayın"
+  }
+}
