@@ -16,13 +16,18 @@
     "createAccount": "Create Account",
     "loading": "Loading...",
     "signingIn": "Signing in...",
-    "creatingAccount": "Creating account..."
+    "creatingAccount": "Creating account...",
+    "error": "Error",
+    "success": "Success",
+    "logout": "Logout",
+    "unexpectedError": "An unexpected error occurred"
   },
   "login": {
     "title": "LookforX Admin",
     "subtitle": "Enter your credentials to access the admin panel",
     "loginFailed": "Login failed. Please try again.",
-    "googleLoginFailed": "Failed to connect with Google. Please try again."
+    "googleLoginFailed": "Failed to connect with Google. Please try again.",
+    "loginSuccessful": "Login successful"
   },
   "signup": {
     "title": "Create Account",
@@ -32,6 +37,30 @@
     "upperCase": "At least one uppercase letter",
     "number": "At least one number",
     "specialChar": "At least one special character"
+  },
+  "dashboard": {
+    "title": "Admin Panel",
+    "welcomeMessage": "Welcome, {{name}}!",
+    "welcomeGeneric": "Welcome!",
+    "userId": "ID",
+    "noUserInfo": "No user information",
+    "user": "User",
+    "anonymousUser": "Anonymous User",
+    "noEmail": "No email",
+    "refreshUserData": "Refresh User Data",
+    "userDataRefreshed": "User data refreshed successfully",
+    "userDataRefreshError": "Failed to refresh user data",
+    "userDataError": "Failed to get user data. Please login again.",
+    "debugInfo": "Debug Information",
+    "isAuthenticated": "isAuthenticated",
+    "userObject": "User Object",
+    "cookieToken": "Cookie Token",
+    "localStorageToken": "LocalStorage Token",
+    "tokenContent": "Token Content",
+    "exists": "Exists",
+    "notExists": "Not Exists",
+    "noToken": "None",
+    "tokenDecodeError": "Token decode error"
   },
   "branding": {
     "title": "LookforX",

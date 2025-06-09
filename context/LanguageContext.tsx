@@ -11,7 +11,7 @@ interface LanguageContextType {
   locale: Locale;
   translations: Translations;
   changeLanguage: (locale: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const defaultLanguage: Locale = 'tr';
@@ -25,8 +25,10 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [locale, setLocale] = useState<Locale>(defaultLanguage);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     // Browser tarafında çalıştığından emin olalım
     if (typeof window !== 'undefined') {
       const savedLocale = localStorage.getItem('locale') as Locale | null;
@@ -48,32 +50,55 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const changeLanguage = (newLocale: Locale) => {
+    console.log(`Changing language to: ${newLocale}`);
     setLocale(newLocale);
     if (typeof window !== 'undefined') {
       localStorage.setItem('locale', newLocale);
-      // Sayfayı yeniden yüklemeden dil değişikliğini uygulayalım
       document.documentElement.lang = newLocale;
+      
+      // Dil değişikliğini diğer bileşenlere bildirmek için bir olay tetikleyelim
+      window.dispatchEvent(new Event('languageChange'));
     }
   };
 
-  const t = (key: string) => {
-    const keys = key.split('.');
-    let value: any = translations[locale];
-    
-    for (const k of keys) {
-      if (value && value[k]) {
-        value = value[k];
-      } else {
-        console.warn(`Translation key not found: ${key}`);
-        return key;
+  const t = (key: string, params?: Record<string, string>) => {
+    try {
+      const keys = key.split('.');
+      let value: any = translations[locale];
+      
+      for (const k of keys) {
+        if (value && value[k]) {
+          value = value[k];
+        } else {
+          console.warn(`Translation key not found: ${key}`);
+          return key;
+        }
       }
+      
+      if (typeof value === 'string' && params) {
+        // Parametreleri değiştir (örn: {{name}} -> params.name)
+        return Object.entries(params).reduce((str, [paramKey, paramValue]) => {
+          return str.replace(new RegExp(`{{${paramKey}}}`, 'g'), paramValue);
+        }, value);
+      }
+      
+      return typeof value === 'string' ? value : key;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return key;
     }
-    
-    return typeof value === 'string' ? value : key;
+  };
+
+  // Varsayılan değerler
+  const contextValue: LanguageContextType = {
+    locale,
+    translations: translations[locale],
+    changeLanguage,
+    t
   };
 
   return (
-    <LanguageContext.Provider value={{ locale, translations: translations[locale], changeLanguage, t }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import LanguageSwitcher, { t } from '@/components/LanguageSwitcher';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Button,
   Input,
@@ -31,6 +32,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const toast = useToast();
   const { getGoogleAuthUrl, fetchUserData } = useAuth();
+  const { t } = useLanguage(); // useLanguage hook'undan t fonksiyonunu alalım
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -245,10 +247,11 @@ export default function LoginPage() {
           <CardFooter justifyContent="center" borderTopWidth="1px" borderColor="gray.100" pt={3} pb={3}>
             <Text fontSize="sm" color="gray.600">
               {t('common.dontHaveAccount')}{' '}
-              <Link href="/signup">
-                <Text as="span" color="blue.600" fontWeight="medium" _hover={{ color: "blue.800" }}>
-                  {t('common.signUp')}
-                </Text>
+              <Link
+                href="/signup"
+                _hover={{ textDecoration: 'underline' }}
+              >
+                {t('common.signUp')}
               </Link>
             </Text>
           </CardFooter>

@@ -4,7 +4,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import LanguageSwitcher, { t } from '@/components/LanguageSwitcher';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Button,
   Input,
@@ -34,49 +35,60 @@ export default function SignupPage() {
   const router = useRouter();
   const toast = useToast();
   const { getGoogleAuthUrl, fetchUserData } = useAuth();
+  const { t } = useLanguage(); // useLanguage hook'undan t fonksiyonunu alalım
+  
+  // Form state
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [, forceUpdate] = useState({});
-
-  // Dil değişikliğini izlemek için
+  
+  // Şifre doğrulama
+  const [passwordValid, setPasswordValid] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false
+  });
+  
+  // Şifre değiştiğinde doğrulama yap
   useEffect(() => {
-    const handleStorageChange = () => {
-      forceUpdate({});
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  // Password validation
-  const hasMinLength = password.length >= 8;
-  const hasUpperCase = /[A-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
+    setPasswordValid({
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[^A-Za-z0-9]/.test(password)
+    });
+  }, [password]);
+  
+  // Şifre yeterince güçlü mü?
+  const isPasswordStrong = Object.values(passwordValid).filter(Boolean).length >= 4;
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Şifre yeterince güçlü değilse uyarı göster
+    if (!isPasswordStrong) {
+      toast({
+        title: t('common.error'),
+        description: t('signup.weakPassword'),
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+    
     setIsLoading(true);
     
     try {
-      // Şifre gereksinimlerini kontrol et
-      if (!hasMinLength || !hasUpperCase || !hasNumber || !hasSpecialChar) {
-        toast({
-          title: t('common.error'),
-          description: t('signup.passwordRequirementsNotMet'),
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
-        setIsLoading(false);
-        return;
-      }
+      console.log("Attempting signup with:", { name, email, password });
       
-      // Signup işlemi
-      const response = await api.post('/auth-service/api/v1/auth/signup', {
+      // Kayıt işlemi
+      const response = await api.post('/auth-service/api/v1/auth/register', {
         name,
         email,
         password
@@ -84,10 +96,10 @@ export default function SignupPage() {
       
       console.log("Signup successful:", response.data);
       
-      // Başarılı signup sonrası yönlendirme
+      // Başarılı kayıt sonrası yönlendirme
       toast({
         title: t('common.success'),
-        description: t('signup.accountCreated'),
+        description: t('signup.signupSuccessful'),
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -155,7 +167,7 @@ export default function SignupPage() {
       <Flex flex="1" alignItems="center" justifyContent="center" p={4} bg="gray.50">
         <Card width="100%" maxWidth="md" boxShadow="lg" borderWidth="0">
           <CardHeader pb={2}>
-            <Heading as="h2" size="md" textAlign="center">{t('signup.title')}</Heading>
+            <Heading as="h2" size="md" textAlign="center">{t('common.createAccount')}</Heading>
             <Text textAlign="center" color="gray.500" mt={1} fontSize="sm">
               {t('signup.subtitle')}
             </Text>

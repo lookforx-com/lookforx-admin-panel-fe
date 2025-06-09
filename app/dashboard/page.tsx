@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import Cookies from 'js-cookie';
 import {
   Box,
@@ -17,10 +18,12 @@ import {
   Button,
   useToast
 } from '@chakra-ui/react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, isAuthenticated, loading, fetchUserData, logout } = useAuth();
+  const { t } = useLanguage();
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const toast = useToast();
 
@@ -69,8 +72,8 @@ export default function Dashboard() {
         // Sadece kullanıcı bilgisi yoksa hata göster
         if (!user) {
           toast({
-            title: "Hata",
-            description: "Kullanıcı bilgileri alınamadı. Lütfen tekrar giriş yapın.",
+            title: t('common.error'),
+            description: t('dashboard.userDataError'),
             status: "error",
             duration: 5000,
             isClosable: true,
@@ -80,7 +83,7 @@ export default function Dashboard() {
     };
     
     updateUserInfo();
-  }, [fetchUserData, router, toast, user]);
+  }, [fetchUserData, router, toast, user, t]);
 
   // Hoş geldin mesajını güncelle
   useEffect(() => {
@@ -88,12 +91,12 @@ export default function Dashboard() {
       console.log("Setting welcome message for user:", user.name);
       // URL decode işlemi yaparken + işaretlerini boşluğa çevir
       const decodedName = user.name.replace(/\+/g, ' ');
-      setWelcomeMessage(`Hoş geldin, ${decodedName}!`);
+      setWelcomeMessage(t('dashboard.welcomeMessage', { name: decodedName }));
     } else {
       console.log("No user name available for welcome message");
-      setWelcomeMessage('Hoş geldiniz!');
+      setWelcomeMessage(t('dashboard.welcomeGeneric'));
     }
-  }, [user]);
+  }, [user, t]);
 
   // Kullanıcı giriş yapmamışsa login sayfasına yönlendir
   useEffect(() => {
@@ -111,8 +114,8 @@ export default function Dashboard() {
     try {
       await fetchUserData();
       toast({
-        title: "Başarılı",
-        description: "Kullanıcı bilgileri yenilendi.",
+        title: t('common.success'),
+        description: t('dashboard.userDataRefreshed'),
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -121,8 +124,8 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error refreshing user data:", error);
       toast({
-        title: "Hata",
-        description: "Kullanıcı bilgileri yenilenemedi.",
+        title: t('common.error'),
+        description: t('dashboard.userDataRefreshError'),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -133,12 +136,12 @@ export default function Dashboard() {
   // Token bilgilerini görüntüleme
   const getTokenInfo = () => {
     const token = getToken();
-    if (!token) return 'Yok';
+    if (!token) return t('dashboard.noToken');
     
     try {
       return JSON.stringify(JSON.parse(atob(token.split('.')[1])), null, 2);
     } catch (e) {
-      return 'Token decode hatası';
+      return t('dashboard.tokenDecodeError');
     }
   };
 
@@ -146,34 +149,39 @@ export default function Dashboard() {
     return (
       <Flex justify="center" align="center" height="100vh">
         <Spinner size="xl" />
-        <Text ml={4}>Yükleniyor...</Text>
+        <Text ml={4}>{t('common.loading')}</Text>
       </Flex>
     );
   }
 
   return (
     <Box minH="100vh">
+      {/* Dil değiştirici */}
+      <Box position="absolute" top={4} right={4} zIndex={10}>
+        <LanguageSwitcher />
+      </Box>
+      
       <Container maxW="container.xl" py={8}>
         <VStack spacing={8} align="stretch">
           <Flex justify="space-between" align="center">
             <Box>
-              <Heading size="lg">Admin Panel</Heading>
+              <Heading size="lg">{t('dashboard.title')}</Heading>
               <Text color="gray.600">{welcomeMessage}</Text>
               <Text fontSize="sm" color="gray.500">
-                {user ? `ID: ${user.id}` : 'Kullanıcı bilgisi yok'}
+                {user ? `${t('dashboard.userId')}: ${user.id}` : t('dashboard.noUserInfo')}
               </Text>
             </Box>
             <HStack>
               <Avatar 
                 size="md" 
-                name={user?.name || 'User'} 
+                name={user?.name || t('dashboard.user')} 
                 src={user?.imageUrl} 
               />
               <Box>
                 <Text fontWeight="bold">
-                  {user?.name ? user.name.replace(/\+/g, ' ') : 'İsimsiz Kullanıcı'}
+                  {user?.name ? user.name.replace(/\+/g, ' ') : t('dashboard.anonymousUser')}
                 </Text>
-                <Text fontSize="sm" color="gray.600">{user?.email || 'E-posta yok'}</Text>
+                <Text fontSize="sm" color="gray.600">{user?.email || t('dashboard.noEmail')}</Text>
               </Box>
             </HStack>
           </Flex>
@@ -184,7 +192,7 @@ export default function Dashboard() {
               size="sm" 
               onClick={handleRefreshUserData}
             >
-              Kullanıcı Bilgilerini Yenile
+              {t('dashboard.refreshUserData')}
             </Button>
             
             <Button 
@@ -192,18 +200,18 @@ export default function Dashboard() {
               size="sm" 
               onClick={logout}
             >
-              Çıkış Yap
+              {t('common.logout')}
             </Button>
           </Flex>
           
           {/* Debug bilgileri */}
           <Box mt={8} p={4} bg="gray.50" borderRadius="md">
-            <Heading size="sm" mb={2}>Debug Bilgileri</Heading>
-            <Text fontSize="xs">isAuthenticated: {isAuthenticated ? 'true' : 'false'}</Text>
-            <Text fontSize="xs">User Object: {user ? JSON.stringify(user, null, 2) : 'null'}</Text>
-            <Text fontSize="xs">Cookie Token: {Cookies.get('accessToken') ? 'Var' : 'Yok'}</Text>
-            <Text fontSize="xs">LocalStorage Token: {typeof window !== 'undefined' && localStorage.getItem('accessToken') ? 'Var' : 'Yok'}</Text>
-            <Text fontSize="xs">Token Content: {getTokenInfo()}</Text>
+            <Heading size="sm" mb={2}>{t('dashboard.debugInfo')}</Heading>
+            <Text fontSize="xs">{t('dashboard.isAuthenticated')}: {isAuthenticated ? 'true' : 'false'}</Text>
+            <Text fontSize="xs">{t('dashboard.userObject')}: {user ? JSON.stringify(user, null, 2) : 'null'}</Text>
+            <Text fontSize="xs">{t('dashboard.cookieToken')}: {Cookies.get('accessToken') ? t('dashboard.exists') : t('dashboard.notExists')}</Text>
+            <Text fontSize="xs">{t('dashboard.localStorageToken')}: {typeof window !== 'undefined' && localStorage.getItem('accessToken') ? t('dashboard.exists') : t('dashboard.notExists')}</Text>
+            <Text fontSize="xs">{t('dashboard.tokenContent')}: {getTokenInfo()}</Text>
           </Box>
         </VStack>
       </Container>

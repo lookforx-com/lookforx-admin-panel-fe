@@ -16,13 +16,18 @@
     "createAccount": "Hesap Oluştur",
     "loading": "Yükleniyor...",
     "signingIn": "Giriş yapılıyor...",
-    "creatingAccount": "Hesap oluşturuluyor..."
+    "creatingAccount": "Hesap oluşturuluyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "logout": "Çıkış Yap",
+    "unexpectedError": "Beklenmeyen bir hata oluştu"
   },
   "login": {
-    "title": "LookforX Admin",
+    "title": "LookforX Yönetici",
     "subtitle": "Yönetici paneline erişmek için giriş yapın",
     "loginFailed": "Giriş başarısız. Lütfen tekrar deneyin.",
-    "googleLoginFailed": "Google ile bağlantı kurulamadı. Lütfen tekrar deneyin."
+    "googleLoginFailed": "Google ile bağlantı kurulamadı. Lütfen tekrar deneyin.",
+    "loginSuccessful": "Giriş başarılı"
   },
   "signup": {
     "title": "Hesap Oluştur",
@@ -32,6 +37,30 @@
     "upperCase": "En az bir büyük harf",
     "number": "En az bir rakam",
     "specialChar": "En az bir özel karakter"
+  },
+  "dashboard": {
+    "title": "Yönetici Paneli",
+    "welcomeMessage": "Hoş geldin, {{name}}!",
+    "welcomeGeneric": "Hoş geldiniz!",
+    "userId": "ID",
+    "noUserInfo": "Kullanıcı bilgisi yok",
+    "user": "Kullanıcı",
+    "anonymousUser": "İsimsiz Kullanıcı",
+    "noEmail": "E-posta yok",
+    "refreshUserData": "Kullanıcı Bilgilerini Yenile",
+    "userDataRefreshed": "Kullanıcı bilgileri başarıyla yenilendi",
+    "userDataRefreshError": "Kullanıcı bilgileri yenilenemedi",
+    "userDataError": "Kullanıcı bilgileri alınamadı. Lütfen tekrar giriş yapın.",
+    "debugInfo": "Hata Ayıklama Bilgileri",
+    "isAuthenticated": "Kimlik Doğrulandı",
+    "userObject": "Kullanıcı Nesnesi",
+    "cookieToken": "Cookie Token",
+    "localStorageToken": "LocalStorage Token",
+    "tokenContent": "Token İçeriği",
+    "exists": "Var",
+    "notExists": "Yok",
+    "noToken": "Yok",
+    "tokenDecodeError": "Token çözme hatası"
   },
   "branding": {
     "title": "LookforX",
